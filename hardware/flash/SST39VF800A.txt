@@ -1,0 +1,982 @@
+Software
+Drivers
+
+SST39VF800A
+8 Mbit Multi-Purpose Flash
+
+September 2001
+
+
+ABOUT THE SOFTWARE
+This application note provides software driver examples for 39VF800A,
+8 Mbit Multi-Purpose Flash, that can be used in any microprocessor based
+system.  Software driver examples used in this document utilize two programming
+languages: (a) high -level "C" for broad platform support and (b) optimized x86
+assembly language. In many cases, software driver routines can be inserted
+"as is" into the main body of code being developed by the system software
+developers. Extensive comments are included in each routine to describe the
+function of each routine. The driver in "C" language can be used with many
+microprocessors and microcontrollers, while the x86 assembly language provides
+an optimized solution for x86 microprocessors.
+
+ABOUT THE SST39VF800A
+
+Companion product datasheets for the SST39VF800A should be reviewed in
+conjunction with this application note for a complete understanding of
+the device.
+
+Both the C and x86 assembly code in the document contain the following routines,
+in this order:
+
+Name                    Function
+------------------------------------------------------------------
+Check_SST_39VF800A       Check manufacturer and device ID
+CFI_Query               CFI Query Entry/Exit command sequence
+Erase_Entire_Chip       Erase the contents of the entire chip
+Erase_One_Sector        Erase a sector of 2048 words
+Erase_One_Block         Erase a block of 32K words
+Program_One_Word        Alter data in one word
+Program_One_Sector      Alter data in 2048 word sector
+Program_One_Block       Alter data in 32K word block
+Check_Toggle_Ready      End of internal program or erase detection using
+                        Toggle bit
+Check_Data_Polling      End of internal program or erase detection using
+                        Data# polling
+
+
+"C" LANGUAGE DRIVERS
+
+/***********************************************************************/
+/* Copyright Silicon Storage Technology, Inc. (SST), 1994-2001         */
+/* Example "C" language Driver of 39VF800A 8 Mbitt Multi-Purpose Flash   */
+/* Nelson Wang, Silicon Storage Technology, Inc.                       */
+/*                                                                     */
+/* Revision 1.0, Sept. 12, 2001                                         */
+/*                                                                     */
+/* This file requires these external "timing"  routines:               */
+/*                                                                     */
+/*      1.)  Delay_150_Nano_Seconds                                    */
+/*      2.)  Delay_25_Milli_Seconds                                    */
+/*      3.)  Delay_100_Milli_Seconds                                   */
+/***********************************************************************/
+
+#define FALSE                   0
+#define TRUE                    1
+
+#define SECTOR_SIZE             2048    /* Must be 2048 words for 39VFX00A */
+#define BLOCK_SIZE              32768   /* Must be 32K words for 39VFX00A  */
+
+#define SST_ID                  0xBF    /* SST Manufacturer's ID code   */
+#define SST_39VF800A             0x2781  /* SST39VF800A device code      */
+
+typedef unsigned char           BYTE;
+typedef unsigned int            WORD;
+
+/* -------------------------------------------------------------------- */
+/*                       EXTERNAL ROUTINES                              */
+/* -------------------------------------------------------------------- */
+
+extern void     Delay_150_Nano_Seconds();
+extern void     Delay_25_Milli_Seconds();
+extern void     Delay_100_Milli_Seconds();
+
+
+/*************************************************************************/
+/* PROCEDURE:   Check_SST_39VF800A                */
+/*                                                                      */
+/* This procedure decides whether a physical hardware device has a      */
+/* SST39VF800A 8 Mbit Multi-Purpose Flash installed or not  */
+/*                                                                      */
+/* Input:                                                               */
+/*          None                                                        */
+/*                                                                      */
+/* Output:                                                              */
+/*          return TRUE:  indicates a SST39VF800A     */
+/*          return FALSE: indicates not a SST39VF800A                 */
+/************************************************************************/
+
+int Check_SST_39VF800A
+{
+        WORD far *Temp;
+        WORD SST_id1;
+        WORD far *Temp1;
+        WORD SST_id2;
+        int  ReturnStatus;
+
+        /*  Issue the Software Product ID code to 39VF800A   */
+
+        Temp1 = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp1= 0xAAAA;                 /* write data 0xAAAA to the address */
+        Temp1 = (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh  */
+        *Temp1= 0x5555;                 /* write data 0x5555 to the address */
+        Temp1 = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp1= 0x9090;                 /* write data 0x9090 to the address */
+
+        Delay_150_Nano_Seconds();
+
+        /* Read the product ID from 39VF800A */
+
+        Temp  = (WORD far *)0xC0000000; /* set up address to be C000:0000h */
+        SST_id1  =  *Temp;              /* get first ID word               */
+	SST_id1  =  SST_id1 & 0xFF;     /* mask of higher byte             */
+	Temp1 = (WORD far *)0xC0000001; /* set up address to be C000:0001h */
+        SST_id2  =  *Temp1;             /* get second ID word              */
+
+        /* Determine whether there is a SST39VF800 installed or not */
+
+        if ((SST_id1 == SST_ID) && (SST_id2 ==SST_39VF800A))
+                ReturnStatus = TRUE;
+        else
+                ReturnStatus = FALSE;
+
+        /* Issue the Soffware Product ID Exit code thus returning the 39VF800A */
+        /* to the read operating mode                                         */
+
+        Temp1  = (WORD far *)0xC0005555; /* set up address to be C000:5555h   */
+        *Temp1 = 0xAAAA;                 /* write data 0xAAAA to the address  */
+        Temp1  = (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh   */
+        *Temp1 = 0x5555;                 /* write data 0x5555 to the address  */
+        Temp1  = (WORD far *)0xC0005555; /* set up address to be C000:5555h   */
+        *Temp1 = 0xF0F0;                 /* write data 0xF0F0 to the address  */
+
+        Delay_150_Nano_Seconds();
+
+        return(ReturnStatus);
+}
+
+/************************************************************************/
+/* PROCEDURE:   CFI_Query                                               */
+/*                                                                      */
+/* This procedure should be used to query for CFI information           */
+/*                                                                      */
+/* Input:                                                               */
+/*          None                                                        */
+/*                                                                      */
+/* Output:                                                              */
+/*          None                                                        */
+/************************************************************************/
+
+int CFI_Query()
+{
+        WORD far *Temp1;
+
+        /*  Issue the Software Product ID code to 39VF800A   */
+
+        Temp1 = (WORD far *)0xC0005555; /* set up address to be C000:5555h    */
+        *Temp1= 0xAAAA;                 /* write data 0xAAAA to the address   */
+        Temp1 = (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh    */
+        *Temp1= 0x5555;                 /* write data 0x5555 to the address   */
+        Temp1 = (WORD far *)0xC0005555; /* set up address to be C000:5555h    */
+        *Temp1= 0x9898;                 /* write data 0x9898 to the address   */
+
+        Delay_150_Nano_Seconds();
+
+        /* --------------------------------- */
+        /*  Perform all CFI operations here  */
+        /*  NOTE:  no sample code provided   */
+        /* --------------------------------- */
+
+
+        /* Issue the CFI Exit code thus returning the 39VF800A  */
+        /* to the read operating mode                          */
+
+        Temp1  = (WORD far *)0xC0005555; /* set up address to be C000:5555h    */
+        *Temp1 = 0xAAAA;                 /* write data 0xAAAA to the address   */
+        Temp1  = (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh    */
+        *Temp1 = 0x5555;                 /* write data 0x5555 to the address   */
+        Temp1  = (WORD far *)0xC0005555; /* set up address to be C000:5555h    */
+        *Temp1 = 0xF0F0;                 /* write data 0xF0F0 to the address   */
+
+        Delay_150_Nano_Seconds();
+}
+
+
+/************************************************************************/
+/* PROCEDURE:   Erase_Entire_Chip                                       */
+/*                                                                      */
+/* This procedure can be used to erase the entire chip.                 */
+/*                                                                      */
+/* Input:                                                               */
+/*      NONE                                                            */
+/*                                                                      */
+/* Output:                                                              */
+/*      NONE                                                            */
+/************************************************************************/
+
+int Erase_Entire_Chip()
+{
+        WORD far *Temp;
+
+        /*  Issue the Chip Erase command to 39VF800A  */
+
+        Temp  = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp = 0xAAAA;                 /* write data 0xAAAA to the address */
+        Temp  = (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh  */
+        *Temp = 0x5555;                 /* write data 0x5555 to the address */
+        Temp  = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp = 0x8080;                 /* write data 0x8080 to the address */
+        Temp  = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp = 0xAAAA;                 /* write data 0xAAAA to the address */
+        Temp  = (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh  */
+        *Temp = 0x5555;                 /* write data 0x5555 to the address */
+        Temp  = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp = 0x1010;                 /* write data 0x1010 to the address */
+        Delay_100_Milli_Seconds();      /* Delay Tsce time                  */
+}
+
+/************************************************************************/
+/* PROCEDURE:   Erase_One_Sector                                        */
+/*                                                                      */
+/* This procedure can be used to erase a total of 2048 words.           */
+/*                                                                      */
+/* Input:                                                               */
+/*      Dst     DESTINATION address where the erase operation starts    */
+/*                                                                      */
+/* Output:                                                              */
+/*      NONE                                                            */
+/************************************************************************/
+
+int Erase_One_Sector (WORD far *Dst)
+{
+        WORD far *Temp;
+
+        /*  Issue the Sector Erase command to 39VF800A  */
+
+        Temp  = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp = 0xAAAA;                 /* write data 0xAAAA to the address */
+        Temp  = (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh  */
+        *Temp = 0x5555;                 /* write data 0x5555 to the address */
+        Temp  = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp = 0x8080;                 /* write data 0x8080 to the address */
+        Temp  = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp = 0xAAAA;                 /* write data 0xAAAA to the address */
+        Temp  = (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh  */
+        *Temp = 0x5555;                 /* write data 0x5555 to the address */
+
+	Temp  = Dst;                    /* set up starting address to be erased */
+        *Temp = 0x3030;                 /* write data 0x3030 to the address */
+        Delay_25_Milli_Seconds();       /* Delay time = Tse                 */
+}
+
+
+/************************************************************************/
+/* PROCEDURE:   Erase_One_Block                                         */
+/*                                                                      */
+/* This procedure can be used to erase a total of 32K words.            */
+/*                                                                      */
+/* Input:                                                               */
+/*      Dst     DESTINATION address where the erase operation starts    */
+/*                                                                      */
+/* Output:                                                              */
+/*      NONE                                                            */
+/************************************************************************/
+
+int Erase_One_Block (WORD far *Dst)
+{
+        WORD far *Temp;
+
+        /*  Issue the Sector Erase command to 39VF800A  */
+
+        Temp  = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp = 0xAAAA;                 /* write data 0xAAAA to the address */
+        Temp  = (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh  */
+        *Temp = 0x5555;                 /* write data 0x5555 to the address */
+        Temp  = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp = 0x8080;                 /* write data 0x8080 to the address */
+        Temp  = (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp = 0xAAAA;                 /* write data 0xAAAA to the address */
+        Temp  = (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh  */
+        *Temp = 0x5555;                 /* write data 0x5555 to the address */
+
+	Temp  = Dst;                    /* set up starting address to be erased */
+        *Temp = 0x5050;                 /* write data 0x5050 to the address */
+        Delay_25_Milli_Seconds();       /* Delay time = Tbe                 */
+}
+
+/************************************************************************/
+/* PROCEDURE:   Program_One_Word                                        */
+/*                                                                      */
+/* This procedure can be used to program ONE word of data to the        */
+/* 39VF800.                                                             */
+/*                                                                      */
+/* NOTE:  It is necessary to first erase the sector containing the      */
+/*        word to be programmed.                                  */
+/*                                                                      */
+/* Input:                                                               */
+/*           Src     The WORD which will be written to the 39VF800A      */
+/*           Dst     DESTINATION address which will be written with the */
+/*                   data passed in from Src                            */
+/*                                                                      */
+/* Output:                                                              */
+/*           None                                                       */
+/************************************************************************/
+
+void Program_One_Word (WORD SrcWord,    WORD far *Dst)
+{
+	WORD far *Temp;
+	WORD far *SourceBuf;
+        WORD far *DestBuf;
+        int Index;
+
+        DestBuf = Dst;
+
+        Temp =  (WORD far *)0xC0005555; /* set up address to be C000:555h   */
+        *Temp = 0xAAAA;                 /* write data 0xAAAA to the address */
+        Temp =  (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh  */
+        *Temp = 0x5555;                 /* write data 0x5555 to the address */
+        Temp =  (WORD far *)0xC0005555; /* set up address to be C000:5555h  */
+        *Temp = 0xA0A0;                 /* write data 0xA0A0 to the address */
+        *DestBuf = SrcWord;             /* transfer the byte to destination */
+        Check_Toggle_Ready(DestBuf);    /* wait for TOGGLE bit to get ready */
+}
+
+
+/************************************************************************/
+/* PROCEDURE:   Program_One_Sector                                      */
+/*                                                                      */
+/* This procedure can be used to program a total of 2048 words of data  */
+/* to the SST39VF800A.                                                   */
+/*                                                                      */
+/* Input:                                                               */
+/*           Src     SOURCE address containing the data which will be   */
+/*                   written to the 39VF800                             */
+/*           Dst     DESTINATION address which will be written with the */
+/*                   data passed in from Src                            */
+/*                                                                      */
+/* Output:                                                              */
+/*           None                                                       */
+/************************************************************************/
+
+void Program_One_Sector (WORD far *Src,    WORD far *Dst)
+{
+        WORD far *Temp;
+        WORD far *SourceBuf;
+        WORD far *DestBuf;
+        int Index;
+
+        SourceBuf = Src;
+        DestBuf = Dst;
+
+        Erase_One_Sector(Dst);          /* erase the sector first */
+
+        for (Index = 0; Index < SECTOR_SIZE; Index++)
+        {
+            Temp =  (WORD far *)0xC0005555; /* set up address to be C000:555h           */
+            *Temp = 0xAAAA;                 /* write data 0xAAAA to the address         */
+            Temp =  (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh          */
+            *Temp = 0x5555;                 /* write data 0x5555 to the address         */
+            Temp =  (WORD far *)0xC0005555; /* set up address to be C000:5555h          */
+            *Temp = 0xA0A0;                 /* write data 0xA0A0 to the address         */
+            Temp = DestBuf;                 /* save the original Destination address    */
+            *DestBuf++ = *SourceBuf++;      /* transfer data from source to destination */
+            Check_Toggle_Ready(Temp);       /* wait for TOGGLE bit to get ready         */
+        }
+}
+
+
+
+/************************************************************************/
+/* PROCEDURE:   Program_One_Block                                       */
+/*                                                                      */
+/* This procedure can be used to program a total of 32k words of data   */
+/* to the SST39VF800A.                                                   */
+/*                                                                      */
+/* Input:                                                               */
+/*           Src     SOURCE address containing the data which will be   */
+/*                   written to the 39VF800                             */
+/*           Dst     DESTINATION address which will be written with the */
+/*                   data passed in from Src                            */
+/*                                                                      */
+/* Output:                                                              */
+/*           None                                                       */
+/************************************************************************/
+
+void Program_One_Block (WORD far *Src,    WORD far *Dst)
+{
+        WORD far *Temp;
+        WORD far *SourceBuf;
+        WORD far *DestBuf;
+        int Index;
+
+        SourceBuf = Src;
+        DestBuf = Dst;
+
+        Erase_One_Block(Dst);          /* erase the sector first */
+
+        for (Index = 0; Index < BLOCK_SIZE; Index++)
+        {
+            Temp =  (WORD far *)0xC0005555; /* set up address to be C000:555h           */
+            *Temp = 0xAAAA;                 /* write data 0xAAAA to the address         */
+            Temp =  (WORD far *)0xC0002AAA; /* set up address to be C000:2AAAh          */
+            *Temp = 0x5555;                 /* write data 0x5555 to the address         */
+            Temp =  (WORD far *)0xC0005555; /* set up address to be C000:5555h          */
+            *Temp = 0xA0A0;                 /* write data 0xA0A0 to the address         */
+            Temp = DestBuf;                 /* save the original Destination address    */
+            *DestBuf++ = *SourceBuf++;      /* transfer data from source to destination */
+            Check_Toggle_Ready(Temp);       /* wait for TOGGLE bit to get ready         */
+        }
+}
+
+
+/************************************************************************/
+/* PROCEDURE:    Check_Toggle_Ready                                     */
+/*                                                                      */
+/* During the internal program cycle, any consecutive read operation    */
+/* on DQ6 will produce alternating 0's and 1's (i.e. toggling between   */
+/* 0 and 1). When the program cycle is completed, DQ6 of the data will  */
+/* stop toggling. After the DQ6 data bit stops toggling, the device is  */
+/* ready for next operation.                                            */
+/*                                                                      */
+/* Input:                                                               */
+/*           Dst        must already be set-up by the caller            */
+/*                                                                      */
+/* Output:                                                              */
+/*           None                                                       */
+/************************************************************************/
+
+void Check_Toggle_Ready (WORD far  *Dst)
+{
+        BYTE Loop = TRUE;
+        WORD PreData;
+        WORD CurrData;
+        unsigned long TimeOut = 0;
+
+        PreData = *Dst;
+        PreData = PreData & 0x4040;
+        while ((TimeOut< 0x07FFFFFF) && (Loop))
+        {
+            CurrData = *Dst;
+            CurrData = CurrData & 0x4040;
+            if (PreData == CurrData)
+                    Loop = FALSE;   /* ready to exit the while loop */
+            PreData = CurrData;
+            TimeOut++;
+        }
+}
+
+
+/************************************************************************/
+/* PROCEDURE:   Check_Data_Polling                                      */
+/*                                                                      */
+/* During the internal program cycle, any attempt to read DQ7 of the    */
+/* last byte loaded during the page/byte-load cycle will receive the    */
+/* complement of the true data.  Once the program cycle is completed,   */
+/* DQ7 will show true data.                                             */
+/*                                                                      */
+/* Input:                                                               */
+/*           Dst        must already be set-up by the caller            */
+/*           True       Data is the original (true) data                */
+/*                                                                      */
+/* Output:                                                              */
+/*           None                                                       */
+/************************************************************************/
+
+void Check_Data_Polling (WORD far  *Dst,       WORD TrueData)
+{
+        BYTE Loop = TRUE;
+        WORD CurrData;
+        unsigned long TimeOut = 0;
+
+        TrueData = TrueData &  0x8080;
+        while ((TimeOut< 0x07FFFFFF) && (Loop))
+        {
+                CurrData = *Dst;
+                CurrData = CurrData & 0x8080;
+                if (TrueData == CurrData)
+                        Loop = FALSE;   /* ready to exit the while loop  */
+                TimeOut++;
+        }
+}
+
+8086 ASSEMBLY LANGUAGE DRIVERS
+
+; ======================================================================
+; Copyright Silicon Storage Technology, Inc. (SST), 1994-1999
+; EXAMPLE 8086 assembly Drivers for SST39VF800A 8 Mbit MultiPurpose Flash
+; Frank Cirimele,  Silicon Storage Technology, Inc.
+;
+; Revision 1.0, Sept.12, 2001
+;
+; This file requires these external "timing" routines:
+;
+;       1.)  Delay_150_Nano_Seconds
+;       2.)  Delay_25_Milli_Seconds
+;       3.)  Delay_100_Milli_Seconds
+; ======================================================================
+
+SECTOR_SIZE             EQU     2048    ; Must be 4096 bytes for SST39VF800A
+BLOCK_SIZE              EQU     32768
+
+SST_ID                  EQU     0BFh    ; SST Manufacturer's ID code
+SST_SST39VF800A          EQU     02781h  ; SST SST39VF800A internal code
+
+ABS_SEGMENT     EQU     0C000h
+
+extrn   Delay_150_Nano_Seconds:near
+extrn   Delay_25_Milli_Seconds:near
+extrn   Delay_100_Milli_Seconds:near
+
+
+;=======================================================================
+; PROCEDURE:    Check_SST_SST39VF800A
+;
+; This procedure decides whether a physical hardware device has a 
+; SST39VF800A 8 Mbit Multi-Purpose Flash installed or not.
+;
+; Input:
+;       None
+;
+; Output:
+;       carry bit:   CLEARED means a SST39VF800A is installed
+;       carry bit:   SET means a SST39VF800 is NOT installed
+;
+;=======================================================================
+
+Check_SST_SST39VF800       proc    near
+
+        push    ax                              ; save registers
+        push    ds
+
+        cli                                     ; disable interrupts
+        mov     ax, ABS_SEGMENT                 ; set up data segment
+        mov     ds, ax
+
+        mov     ds:word ptr [5555h], 0AAAAh     ; issue the 3-byte product ID
+        mov     ds:word ptr [2AAAh], 05555h     ; command to the SST39VF800A
+        mov     ds:word ptr [5555h], 09090h
+
+        call    Delay_150_Nano_Seconds          ; insert delay = Tide
+
+        mov     ax, ds:[0]
+        cmp     al, SST_ID                      ; is this a SST part?
+        jne     CSC5                            ; NO, then return Carry set
+        mov     ax, ds:[1]
+        cmp     ax, SST_SST39VF800A              ; is it a SST39VF800A?
+        jne     CSC5                            ; NO, then Non-SST part and
+                                                ; set Carry flag
+CSC4:
+        clc                                     ; else clear Carry flay and
+        pushf                                   ; save the result on the STACK
+        jmp     short CSC6
+CSC5:
+        stc                                     ; set Carry flag and 
+        pushf                                   ; save the result on the STACK
+
+CSC6:
+;
+; Issue the Software Product ID Exit code thus returning the SST39VF800A
+; to the read operation mode.
+;
+
+        mov     ds:word ptr [5555h], 0AAAAh     ; issue the 3-byte product ID
+        mov     ds:word ptr [2AAAh], 05555h     ; exit command to the SST39VF800A
+        mov     ds:word ptr [5555h], 0F0F0h
+
+        call    Delay_150_Nano_Seconds		; insert delay = Tida
+
+        popf                                    ; restore result from the stack
+        pop     ds                              ; restore registers
+        pop     ax
+
+        ret
+
+Check_SST_SST39VF800A endp
+
+
+
+;=======================================================================
+; PROCEDURE:    CFI_Query
+;
+; This procedure provides access to the CFI information embedded within
+; the SST39VF800A 8 Mbit Multi-Purpose Flash device.
+;
+; Input:
+;       None
+;
+; Output:
+;       None
+;
+;=======================================================================
+
+CFI_Query       proc    near
+
+        push    ax                              ; save registers
+        push    ds
+
+        cli                                     ; disable interrupts
+        mov     ax, ABS_SEGMENT                 ; set up the ds register
+        mov     ds, ax
+
+        mov     ds:word ptr [5555h], 0AAAAh     ; issue the 3-byte product ID
+        mov     ds:word ptr [2AAAh], 05555h     ; command to the SST39VF800A
+        mov     ds:word ptr [5555h], 09898h
+
+        call    Delay_150_Nano_Seconds		; insert delay = Tida
+
+; -----------------------------------
+;   Perform all CFI operations here
+;   NOTE:  NO sample code provided
+; -----------------------------------
+
+
+        mov     ds:word ptr [5555h], 0AAAAh     ; issue the 3-byte product ID
+        mov     ds:word ptr [2AAAh], 05555h     ; exit command to the SST39VF800A
+        mov     ds:word ptr [5555h], 0F0F0h
+
+        call    Delay_150_Nano_Seconds		; insert delay = Tida
+
+        pop     ds                              ; restore registers
+        pop     ax
+
+        ret
+
+CFI_Query       endp
+
+; =====================================================================
+; PROCEDURE:    Erase_Entire_Chip
+;
+; This procedure can be used to erase the entire contents of
+; SST's SST39VF800A.
+;
+; Input:
+;       none
+;
+; Output:
+;       None
+; =====================================================================
+
+Erase_Entire_Chip       proc    near
+
+        mov     es:word ptr [5555h], 0AAAAh	; send 6-byte code for
+        mov     es:word ptr [2AAAh], 05555h	; chip erase
+        mov     es:word ptr [5555h], 08080h
+        mov     es:word ptr [5555h], 0AAAAh
+        mov     es:word ptr [2AAAh], 05555h
+        mov     es:word ptr [5555h], 01010h
+
+        call    Delay_100_Milli_Seconds		; insert delay = Tsce
+
+        ret
+
+Erase_Entire_Chip       endp
+
+
+; =====================================================================
+; PROCEDURE:    Erase_One_Sector
+;
+; This procedure can be used to erase a sector, or total of 2048 bytes,
+; in the SST39VF800A.
+;
+; Input:
+;       es:di   points to the beginning address of the "Destination" 
+;               sector which will be erased.
+;               ==> Note: The address MUST be on a sector boundary,
+;                         that is, a multiple of 2048.
+;
+; Output:
+;       None
+; =====================================================================
+
+Erase_One_Sector        proc    near
+
+        push    ax                              ; save register
+
+        mov     es:word ptr [5555h], 0AAAAh	; send 6-byte code for
+        mov     es:word ptr [2AAAh], 05555h	; sector erase
+        mov     es:word ptr [5555h], 08080h
+        mov     es:word ptr [5555h], 0AAAAh
+        mov     es:word ptr [2AAAh], 05555h
+        mov     ax, 03030h
+        mov     word ptr es:[di], ax
+
+        call    Delay_25_Milli_Seconds		; insert delay = Tse
+
+        pop     ax                              ; restore register
+
+        ret
+
+Erase_One_Sector        endp
+
+
+; =====================================================================
+; PROCEDURE:    Erase_One_Block
+;
+; This procedure can be used to erase a block, or total of 32K words,
+; in the SST39VF800A.
+;
+; Input:
+;       es:di   points to the beginning address of the "Destination" 
+;               block which will be erased.
+;               ==> Note: The address MUST be on a block boundary,
+;                         that is, a multiple of 32K.
+;
+; Output:
+;       None
+; =====================================================================
+
+Erase_One_Block         proc    near
+
+        push    ax                              ; save register
+
+        mov     es:word ptr [5555h], 0AAAAh	; send 6-byte code for
+        mov     es:word ptr [2AAAh], 05555h	; block erase
+        mov     es:word ptr [5555h], 08080h
+        mov     es:word ptr [5555h], 0AAAAh
+        mov     es:word ptr [2AAAh], 05555h
+        mov     ax, 05050h
+        mov     word ptr es:[di], ax
+
+        call    Delay_25_Milli_Seconds		; insert delay = Tbe
+
+        pop     ax                              ; restore register
+
+        ret
+
+Erase_One_Block         endp
+
+
+; =====================================================================
+; PROCEDURE:    Program_One_Word
+;
+; This procedure can be used to program ONE word of data to the SST39VF800A.
+;
+; NOTE:  It is necessary to first erase the sector containing the word to
+;        be programmed
+;
+;
+; Input:
+;       ax      WORD which will be written into the SST39VF800A.
+;       es:di   DESTINATION address which will be written with the
+;               data input in ax.
+;
+; Output:
+;       None
+;       SI, DI:  Contains the original values
+; =====================================================================
+
+Program_One_Word          proc    near
+
+        push    ax                              ; save registers
+        push    ds
+        mov     ax, ABS_SEGMENT                 ; set up the ds register
+        mov     ds, ax
+        mov     ds:word ptr [5555h], 0AAAAh     ; send 3 byte data protection
+        mov     ds:word ptr [2AAAh], 05555h     ; sequence to the chip
+        mov     ds:word ptr [5555h], 0A0A0h
+        pop     ds                              ; restore registers
+        pop     ax                     
+        mov     word ptr es:[di], ax            ; program the byte
+        call    check_Toggle_Ready              ; wait for TOGGLE bit to be valid
+
+        ret
+
+Program_One_Word          endp
+
+
+; =====================================================================
+; PROCEDURE:    Program_One_Sector
+;
+; This procedure can be used to program a memory sector, or total of 
+; 2048 words, of the SST39VF800A.
+;
+; Input:
+;       ds:si   SOURCE address containing the data which will be
+;               written into the SST39VF800A.
+;       es:di   DESTINATION address which will be written with the
+;               data passed in for ds:si
+;
+; Output:
+;       None
+;       SI, DI:  Contains the original values
+; =====================================================================
+
+Program_One_Sector        proc    near
+
+        push    ax              ; save registers
+        push    bx
+        push    di
+        push    si
+        pushf                   ; preserve the "Direction" flag in the FLAG
+                                ; register
+        cld                     ; clear "Direction" flag in the FLAG register
+                                ; auto-increment SI, and DI
+;
+; Erase the sector before programming.  Each erase command will erase a total
+; of 2048 words for the SST39VF800A
+;
+        call    Erase_One_Sector
+;
+; The following loop will program a total of 2048 words to the SST39VF800A
+;
+        mov     cx, SECTOR_SIZE
+POS1:
+        push    ds
+        mov     ax, ABS_SEGMENT
+        mov     ds, ax
+        mov     ds:word ptr [5555h], 0AAAAh    ; send 3-byte SDP sequence
+        mov     ds:word ptr [2AAAh], 05555h
+        mov     ds:word ptr [5555h], 0A0A0h
+        pop     ds
+
+        lodsw                           ; get the word to be programmed
+        mov     bx, di                  ; preserve DI temporarily
+        stosw                           ; program the word
+        push    di                      ; preserve the updated DI temporarily
+        mov     di, bx
+        call    check_Toggle_Ready      ; wait for TOGGLE bit to get ready
+        pop     di                      ; retrieve the updated DI
+        loop    POS1                    ; continue program more words until done
+;
+; Restore the registers' value from the stack
+;
+        popf                            ; restore original direction flag
+        pop     si                      ; restore registers
+        pop     di
+        pop     bx
+        pop     ax
+
+        ret
+
+Program_One_Sector        endp
+
+
+; =====================================================================
+; PROCEDURE:    Program_One_Block
+;
+; This procedure can be used to program a memory block, or a total of 
+; 32K words, of the SST39VF800A.
+;
+; Input:
+;       ds:si   SOURCE address containing the data which will be
+;               written into the SST39VF800A.
+;       es:di   DESTINATION address which will be written with the
+;               data passed in for ds:si
+;
+; Output:
+;       None
+;       SI, DI:  Contains the original values
+; =====================================================================
+
+Program_One_Block         proc    near
+
+        push    ax              ; save registers
+        push    bx
+        push    di
+        push    si
+        pushf                   ; preserve the "Direction" flag in the FLAG
+                                ; register
+        cld                     ; clear "Direction" flag in the FLAG register
+                                ; auto-increment SI, and DI
+;
+; Erase the block before programming.  Each erase command will erase a total
+; of 32K words of the SST39VF800A.
+;
+        call    Erase_One_Block
+;
+; The following loop will program a total of 32K words to SST's SST39VF800A
+;
+        mov     cx, BLOCK_SIZE
+POB1:
+        push    ds
+        mov     ax, ABS_SEGMENT
+        mov     ds, ax
+        mov     ds:word ptr [5555h], 0AAAAh     ; send 3-byte SDP sequence
+        mov     ds:word ptr [2AAAh], 05555h     
+        mov     ds:word ptr [5555h], 0A0A0h
+        pop     ds
+
+        lodsw                           ; get the word to be programmed
+        mov     bx, di                  ; preserve DI temporarily
+        stosw                           ; program the word
+        push    di                      ; preserve the updated DI temporarily
+        mov     di, bx
+        call    check_Toggle_Ready      ; wait for TOGGLE bit to get ready
+        pop     di                      ; retrieve the updated DI
+        loop    POB1                    ; continue program more words until done
+
+        popf                            ; restore original direction flag
+        pop     si                      ; restore registers
+        pop     di
+        pop     bx
+        pop     ax
+
+        ret
+
+Program_One_Block         endp
+
+
+;======================================================================
+; PROCEDURE:                    Check_Toggle_Ready
+;
+; During the internal program cycle, any consecutive read operation
+; on DQ6 will produce alternating 0’s and 1’s, i.e. toggling between
+; 0 and 1. When the program cycle is completed, the DQ6 data will
+; stop toggling. After the DQ6 data stops toggling, the device is ready
+; for the next operation.
+;
+; Input:
+;       es:di   must already be set-up by the caller
+;
+; Output:
+;       None
+;======================================================================
+
+Check_Toggle_Ready      proc    near
+
+        push    ax              ; save registers
+        push    bx
+
+        mov     ax, es:[di]     ; read a word form the chip
+        and     ax, 4040h       ; mask out the TOGGLE bit (DQ6)
+CTR_Tog2:
+        mov     bx, es:[di]     ; read the same word from the chip again
+        and     bx, 4040h       ; mask out the TOGGLE bit (DQ6)
+        cmp     ax, bx          ; is DQ6 still toggling?
+        je      CTR_Tog3        ; No, then the write operation is done
+        xchg    ax, bx          ; YES, then continue checking...
+        jmp     short CTR_Tog2
+CTR_Tog3:
+        pop     bx              ; restore registers
+        pop     ax
+
+        ret
+
+Check_Toggle_Ready      endp
+
+
+;=======================================================================
+; PROCEDURE:                    Check_Data_Polling
+;
+; During the internal program cycle, any attempt to read DQ7 of the last
+; byte loaded during the page/byte-load cycle will receive the complement 
+; of the true data.  Once the program cycle is completed, DQ7 will show 
+; true data.
+;
+; Input:
+;       es:di   must already be set-up by the caller
+;       bx      contains the original (true) data
+;
+; Output:
+;       None
+;
+;=======================================================================
+
+Check_Data_Polling      proc    near
+
+        push    ax              ; save registers
+        push    bx
+
+        and     bx, 8080h       ; mask out the DQ7 bit
+CDP_Tog2:
+        mov     ax, es:[di]     ; read a word from the chip
+        and     ax, 8080h       ; mask out the DQ7 bit
+        cmp     ax, bx          ; is DQ7 still complementing?
+        jne     CDP_Tog2
+
+        pop     bx              ; restore registers
+        pop     ax
+
+        ret
+
+Check_Data_Polling      endp
+

@@ -1,0 +1,243 @@
+#TITLE=HP 39gs
+#INFO
+New Cliptext library
+#SORT=n
+
+#T=程序头
+HP39AscD 7 OYFF002
+#T=CHECK  aplet命令
+CHECK 数1~6:
+
+#T=SELECT  aplet命令
+SELECT apletname:
+
+#T=SETVIEWS  aplet命令 设置aplet VIEWS菜单
+SETVIEWS
+"Prompt1";"ProgramName1";ViewNumber1;
+"Prompt2";"ProgramName2";ViewNumber2:
+( 可以重复许多Prompt/ProgramName/ViewNumber
+三重参数，根据你的需要)
+
+#T=UNCHECK  aplet命令
+UNCHECK n:
+
+#T=CASE  分支
+CASE
+IF test-clause1 THEN true-clause1 END
+IF test-clause2 THEN true-clause2 END
+.
+.
+IF test-clausen THEN true-clausen END
+END:
+
+#T=IF  分支
+IF test-clause
+THEN true-clause END:
+IF test-clause
+THEN true-clause ELSE false-clause END:
+
+#T=RUN  分支
+RUN "program name": 或 RUN programname:
+
+#T=STOP  分支
+STOP:
+
+#T=IFERR  分支
+IFERR trap-clause
+THEN clause_1
+ELSE clause_2
+END:
+#T=ARC  绘图
+ARC 0;0;2;0;2π:
+FREEZE:
+
+#T=BOX  绘图
+BOX x1;y1;x2;y2:
+
+#T=ERASE  绘图 清屏
+ERASE:
+
+#T=FREEZE  绘图  暂停
+FREEZE:
+按任何键，继续执行
+#T=LINE  绘图  画线
+LINE x1;y1;x2;y2:
+
+#T=PIXON  绘图  打开指定坐标(x,y)的象素
+PIXON x;y:
+
+#T=PIXOFF  绘图  关闭指定坐标(x,y)的象素
+PIXOFF x;y:
+
+#T=TLINE  绘图  反向矩形内的像素
+TLINE x1;y1;x2 ;y2:
+
+#T=DISPLAY→  图形
+DISPLAY→ graphicname:
+
+#T=→DISPLAY  图形
+→DISPLAY graphicname:
+
+#T=→GROB  图形
+→GROB graphicname;expression;fontsize:
+由表达式，利用font_size，建立图形；并将图形保存到图
+形名。Font size (字型尺寸)是1，2或3。如果fontsize
+参数是0，HP 39gs建立的图形，象通过SHOW操作建立
+的一样。
+#T=GROBNOT  图形  使用位转换图形方式，替换图表名
+GROBNOT graphicname:
+
+#T=GROBOR  图形 使用逻辑OR，叠加图形2到图形1
+GROBOR G0; (1,1); G1:
+
+#T=GROBXOR  图形  使用逻辑XOR，叠加图形2到图形1上
+GROBXOR graphicname1;(position);graphicname2:
+
+#T=MAKEGROB  图形  用16进制数以给定宽高创建图表，储存在图表名
+MAKEGROB图表名；宽；高；十六进制数据：
+
+#T=PLOT→  图形  将绘图视窗保存为图表名
+PLOT→ graphicname:
+
+#T=→PLOT  图形  将图表名显示为图表显示状态
+→PLOT 图表名:
+
+#T=REPLACE  图形  当前位置的图表名1替换成图表名2
+REPLACE 图表名1；(位置)；图表名2:
+
+#T=SUB  图形  选取部分的图表(列表或者矩阵)并且将其存为新变量名
+SUB 名字；图标名；(位置)；(位置)；
+
+#T=ZEROGROB  图形 按照给定的宽度和高度创建一个空表并将图表名存好
+ZEROGROB 图表名;宽度;高度:
+
+#T=FOR  循环
+FOR A=1 TO 12 STEP 1;
+
+END:
+
+#T=DO  循环
+DO 
+ 
+
+UNTIL A == 12 END:
+#T=WHILE  循环
+WHILE A < 12 REPEAT
+
+
+END:
+
+#T=BREAK  循环  终止循环
+BREAK:
+
+#T=ADDCOL  矩阵  在特定矩阵的列_序号前插入一列
+ADDCOL
+矩阵名称；[值1,…,值n]；列_序号
+
+#T=ADDROW  矩阵  在特定矩阵的行_序号前插入一行
+ADDROW 矩阵名称；[值1,…, 值n]；行_序号：
+
+#T=DELCOL  矩阵  删除指定矩阵的指定列
+DELCOL 矩阵名称；列_序号:
+
+#T=DELROW  矩阵  删除指定矩阵的指定行
+DELROW 矩阵名称；行_序号：
+
+#T=EDITMAT  矩阵  打开矩阵编辑并显示指定矩阵
+EDITMAT name:
+
+#T=RANDMAT  矩阵  用给定行列数目创建任意个矩阵
+RANDMAT name;rows;columns:
+
+#T=REDIM  矩阵  重设指定矩阵的维数或者矢量的的大小
+REDIM name;size:
+
+#T=REPLACE  矩阵 用从位置start的对象替换储存在 name中矩阵或矢量
+REPLACE name;start;object:
+
+#T=SCALE  矩阵  使用value将特定矩阵的特定行_序号相乘
+SCALE name;value;rownumber:
+
+#T=SCALEADD  矩阵  用值与矩阵的行相乘，加到第二个行上
+SCALEADD name;value;row1;row2:
+
+#T=SUB  矩阵  
+SUB name;object;start;end:
+
+#T=SWAPCOL  矩阵  交换列。指定矩阵列1和列2相互交换
+SWAPCOL name;column1;column2:
+
+#T=SWAPROW  矩阵  交换行，指定矩阵的列1和列2相互交换
+SWAPROW name;row1;row2:
+
+#T=PRDISPLAY  打印  打印显示的内容
+PRDISPLAY:
+
+#T=PRHISTORY  打印  打印历史页中所有对象
+PRHISTORY:
+
+#T=PRVAR  打印  打印变量名称的名称和内容
+PRVAR variablename:
+
+#T=BEEP  提示
+BEEP 频率;秒数:
+
+
+#T=INPUT  提示  
+INPUT name;title,label;help;default:
+
+#T=CHOOSE  提示  创建一个选项框
+CHOOSE variable_name;title;option1; option2;
+...optionn:
+
+#T=CLRVAR  提示  清除特定变量
+CLRVAR 变量:
+
+#T=WAIT  提示  等待指定的秒数
+WAIT 秒数:
+
+#T=FREEZE  提示  
+FREEZE:
+
+#T=EDITMAT  提示  编辑矩阵
+EDITMAT matrixname:
+
+#T=GETKEY  提示  等待弹出一个键，然后将键的编码储存到名称中
+GETKEY 名称:
+
+#T=PROMPT  提示  名称作标题显示一个输入框，并提示输入名称的数值
+PROMPT 名称:
+
+#T=DISP  显示  在指定行数显示文本项目等
+DISP 3;"A is" 2+2
+
+#T=DISPXY  显示  以size font形式，在(x_pos, y_pos)显示对象
+DISPXY x_pos;y_pos;font;object:
+
+#T=DISPTIME  显示  显示当前日期和时间
+DISPTIME:
+
+#T=MSGBOX  显示  显示一个有文本内容的信息框
+MSGBOX 文本项目:
+
+#T=DO1VSTATS  单变量统计  
+DO1VSTATS datasetname:
+
+#T=RANDSEED  单变量统计  依据列或者值设定数据集名称频率
+SETFREQ 数据集名称;列:
+#T=SETSAMPLE  单变量统计  依据列设定数据集名称样本
+SETSAMPLE 数据集名称;列:
+
+#T=DO2VSTATS  双变量统计  使用数据集名称计算变量并将结果存入相应的变量中
+DO2VSTATS 数据集名称:
+
+#T=SETDEPEND  双变量统计  列决定设定数据集名称。数据集名称可以是S1，S2，…，或者S5，列可以是C0-C9
+SETDEPEND 数据集名称;列:
+
+#T=SETINDEP  双变量统计    非列决定设定数据集名称。数据集名称可以是S1，S2，…S5，列可以是C0-C9
+SETINDEP 数据集名称;列:
+
+#T==  赋值
+0 \|> S：
+
+#

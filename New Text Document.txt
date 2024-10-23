@@ -1,0 +1,55 @@
+﻿//0000000c
+//000000B0
+//2.22_raw 036bf0 ~ 03bff0 (0xFF)
+//2.23_e 036bf0 ~ 03bff0 (zh_cn)
+
+//07 80 80 80 80 7c 10 54
+
+//hp39gs_v2.22_raw.bin --rom39.bin
+//diff: 036bf0~03bff8 汉字 16区 全
+//      07bd10~07bfff 符号 01区 全
+//      0bb640~0bbf78 数字/日本字 02区(1,7)7 ~ 04区(8,3)
+//      0dae90~0dafa8 罗马字符 07区(4,9)~07区(8,1);08区(3,1)~08区(7,3)
+//      0de920~0def2f 日本字/罗马字/04区(8,7)~07区(4,8)
+//      0f3020~0FAF80 ?? 无意义内容
+
+
+
+//BOOT V4.01.03.03
+//SERIAL CNA12864
+//serial address: 003ff0
+//43 4e 41 31 32 38 36 34
+
+//hp39gs 显存
+//每行20bytes, 8 pixs/byte
+//0~16 可见区域 17~20 不可见区域
+
+/*
+ptr start (0)
+ptr end (one page size)
+
+
+start <-end
+
+end = (one page size)
+
+
+start <- 0
+
+end = (one page size)
+
+
+start = end
+
+end + single line
+
+
+start - start - single line
+end = start
+
+*/
+
+//07bd00
+//C7 94 FE 92 E9 33 53 3A 
+//07bd08
+//A7 51 15 DF 19 71 8A C6

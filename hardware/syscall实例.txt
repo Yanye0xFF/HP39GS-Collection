@@ -1,0 +1,1328 @@
+tonny@tonny-BDWY-MINI:~/arm-hp$ python search.py 
+What do you want to search?
+syscall
+Select Mode:
+1.file_name only
+2.content only
+3.both file_name and content
+2
+ /home/tonny/arm-hp/examples/benchmarks
+ flops.c
+
+0713::#ifdef UNIX
+0714::#include <sys/time.h>
+0715::#include <sys/resource.h>
+0716::
+0717::#ifdef hpux
+0718::#include <sys/syscall.h>
+0719::#define getrusage(a,b) syscall(SYS_getrusage,a,b)
+0720::#endif
+0721::
+0722::struct rusage rusage;
+---------------------------------------------
+ /home/tonny/arm-hp/examples/benchmarks
+ flops.c
+
+0714::#include <sys/time.h>
+0715::#include <sys/resource.h>
+0716::
+0717::#ifdef hpux
+0718::#include <sys/syscall.h>
+0719::#define getrusage(a,b) syscall(SYS_getrusage,a,b)
+0720::#endif
+0721::
+0722::struct rusage rusage;
+0723::
+---------------------------------------------
+ /home/tonny/arm-hp/examples/benchmarks
+ flops.c
+
+1081::#include <sys/time.h>
+1082::#include <sys/resource.h>
+1083::#include <sys/rusage.h>
+1084::
+1085::#ifdef __hpux
+1086::#include <sys/syscall.h>
+1087::#define getrusage(a,b) syscall(SYS_getrusage,a,b)
+1088::#endif
+1089::
+1090::struct rusage rusage;
+---------------------------------------------
+ /home/tonny/arm-hp/examples/benchmarks
+ flops.c
+
+1082::#include <sys/resource.h>
+1083::#include <sys/rusage.h>
+1084::
+1085::#ifdef __hpux
+1086::#include <sys/syscall.h>
+1087::#define getrusage(a,b) syscall(SYS_getrusage,a,b)
+1088::#endif
+1089::
+1090::struct rusage rusage;
+1091::
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ hpgcc49.h
+
+0045::#include <hpstdlib.h>
+0046::#include <hpstring.h>
+0047::#include <hpsys.h>
+0048::#include <hptime.h>
+0049::#include <kos.h>
+0050::#include <syscall.h>
+0051::#include <saturn.h>
+0052::#include <satdir.h>
+0053::
+0054::#endif
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0007::
+0008::/*#define U32 unsigned int
+0009::#define S32 signed int*/
+0010::
+0011::
+0012::// define syscall entry 000-099
+0013::#define ReserveForTaskScheduler 0
+0014::#define ResetEntry              1
+0015::#define ScheduleTaskEntry       10
+0016::#define CreateMutexEntry        11
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0036::
+0037::#define	CheckBeepEndEntry		28
+0038::#define	StopBeepEntry			29
+0039::#define	GetCPUSpeed				30
+0040::
+0041::// define syscall entry 100-199
+0042::#define freeEntry               101
+0043::#define KillTaskEntry           102
+0044::#define GetTaskPriorityEntry    103
+0045::#define SuspendTaskEntry        104
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0082::
+0083:://lcd refresh interrupt entry
+0084::#define LcdRefreshEntry   		139
+0085::#define LcdRefreshSwitchEntry	140
+0086::
+0087::// define syscall entry 200-299
+0088::#define mallocEntry             201
+0089::#define SetTaskPriorityEntry    202
+0090::#define DelayTaskEntry          203
+0091::#define CreateSemaphoreEntry    204
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0108::#define controlEntry            217
+0109::
+0110::#define GetFuncEntry            218
+0111::#define SetCPUFreqEntry         219
+0112::
+0113::// define syscall entry 300-399
+0114::#define GetMutexEntry           301
+0115::#define GetSemaphoreEntry       302
+0116::
+0117::#define beepEntry               305
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0117::#define beepEntry               305
+0118::
+0119::#define PutStringEntry			306
+0120::#define PutHexNumberEntry		307
+0121::
+0122::// define syscall entry 400-499
+0123::#define CreateTaskEntry         401
+0124::
+0125::#define readEntry               402
+0126::#define writeEntry              403
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0125::#define readEntry               402
+0126::#define writeEntry              403
+0127::#define PutDecNumberEntry		404
+0128::#define Num2StringEntry			405
+0129::
+0130::// define syscall entry 500-599
+0131::
+0132::// define syscall entry 600-699
+0133::
+0134::// define syscall entry 700-799
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0127::#define PutDecNumberEntry		404
+0128::#define Num2StringEntry			405
+0129::
+0130::// define syscall entry 500-599
+0131::
+0132::// define syscall entry 600-699
+0133::
+0134::// define syscall entry 700-799
+0135::
+0136::
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0129::
+0130::// define syscall entry 500-599
+0131::
+0132::// define syscall entry 600-699
+0133::
+0134::// define syscall entry 700-799
+0135::
+0136::
+0137::// sys call functions
+0138::
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0135::
+0136::
+0137::// sys call functions
+0138::
+0139::U32 SysCall(U32 index);
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0136::
+0137::// sys call functions
+0138::
+0139::U32 SysCall(U32 index);
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0137::// sys call functions
+0138::
+0139::U32 SysCall(U32 index);
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0138::
+0139::U32 SysCall(U32 index);
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+0147::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0139::U32 SysCall(U32 index);
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+0147::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7);
+0148::
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+0147::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7);
+0148::
+0149::#endif
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+0147::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7);
+0148::
+0149::#endif
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib
+ syscall.h
+
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+0147::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7);
+0148::
+0149::#endif
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/fileio
+ kos_GetFuncEntry.c
+
+0027:://& the GNU General Public License.
+0028:://&
+0029:://& ****************************************************************************
+0030::
+0031::#include <kos.h>
+0032::#include <syscall.h>
+0033::
+0034::FUNC_PTR kos_GetFuncEntry(U32 module, U32 index)
+0035::{
+0036::	return (FUNC_PTR)syscallArg2(GetFuncEntry, (U32)module, (U32)index);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/fileio
+ kos_GetFuncEntry.c
+
+0031::#include <kos.h>
+0032::#include <syscall.h>
+0033::
+0034::FUNC_PTR kos_GetFuncEntry(U32 module, U32 index)
+0035::{
+0036::	return (FUNC_PTR)syscallArg2(GetFuncEntry, (U32)module, (U32)index);
+0037::}
+0038::
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetPrevFileInfo.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_GetPrevFileInfo(P_FILE_INFO pInfo, U32 index)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetSysTickTime.c
+
+0001:://KOS Time functions
+0002::
+0003::// Added by iblank 2004-10-23
+0004::
+0005::#include "syscall.h"
+0006::#include "kos.h"
+0007::
+0008::U32 kos_GetSysTickTime(void)
+0009::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetSysTickTime.c
+
+0005::#include "syscall.h"
+0006::#include "kos.h"
+0007::
+0008::U32 kos_GetSysTickTime(void)
+0009::{
+0010::	return (U32)syscallArg0(GetSysTickTimeEntry);
+0011::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_SetLastError.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::void kos_SetLastError(S32 errNo)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_SetLastError.c
+
+0037::#include <kos.h>
+0038::
+0039::
+0040::void kos_SetLastError(S32 errNo)
+0041::{
+0042::	syscallArg1(SetLastErrorEntry, (U32)errNo);
+0043::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg0.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::
+0038::
+0039::U32 syscallArg0(U32 index)
+0040::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg0.c
+
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::
+0038::
+0039::U32 syscallArg0(U32 index)
+0040::{
+0041::	return SysCall(index);
+0042::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetLastError.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_GetLastError(void)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetLastError.c
+
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_GetLastError(void)
+0041::{
+0042::	return (S32)syscallArg0(GetLastErrorEntry);
+0043::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ PutHexNumber.c
+
+0001::#include "syscall.h"
+0002::
+0003::void kos_PutHexNumber(U32 dx, U32 dy, U32 value)
+0004::{
+0005::	syscallArg3(PutHexNumberEntry, (U32)dx, (U32)dy, (U32)value);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ PutHexNumber.c
+
+0001::#include "syscall.h"
+0002::
+0003::void kos_PutHexNumber(U32 dx, U32 dy, U32 value)
+0004::{
+0005::	syscallArg3(PutHexNumberEntry, (U32)dx, (U32)dy, (U32)value);
+0006::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetSpecialFileInfo.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_GetSpecialFileInfo(P_BYTE fname, P_FILE_INFO pInfo)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_fattr.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_fattr(P_BYTE fname, U8 attr)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetFirstDirInfo.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_GetFirstDirInfo(P_DIR_INFO pInfo)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg5.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5)
+0040::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg5.c
+
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5)
+0040::{
+0041::	return SysCall(index);
+0042::}
+0043::
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ PutDecNumber.c
+
+0001::#include "syscall.h"
+0002::
+0003::void kos_PutDecNumber(U32 dx, U32 dy, U32 value, U32 bit)
+0004::{
+0005::	syscallArg4(PutDecNumberEntry, (U32)dx, (U32)dy, (U32)value, (U32)bit);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ PutDecNumber.c
+
+0001::#include "syscall.h"
+0002::
+0003::void kos_PutDecNumber(U32 dx, U32 dy, U32 value, U32 bit)
+0004::{
+0005::	syscallArg4(PutDecNumberEntry, (U32)dx, (U32)dy, (U32)value, (U32)bit);
+0006::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ LCDSetContrast.c
+
+0001::#include "syscall.h"
+0002::
+0003::void kos_LCDSetContrast(U32 contrast)
+0004::{
+0005::	syscallArg1(LCDSetContrastEntry, (U32)contrast);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ LCDSetContrast.c
+
+0001::#include "syscall.h"
+0002::
+0003::void kos_LCDSetContrast(U32 contrast)
+0004::{
+0005::	syscallArg1(LCDSetContrastEntry, (U32)contrast);
+0006::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_CheckDiskProtect.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_CheckDiskProtect(void)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetDiskFreeSize.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_GetDiskFreeSize(void)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg7.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7)
+0040::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg7.c
+
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7)
+0040::{
+0041::	return SysCall(index);
+0042::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ getSerialNumber.c
+
+0001::
+0002::#include "syscall.h"
+0003::
+0004::P_BYTE kos_getSerialNumber(void)
+0005::{
+0006::	return (P_BYTE)syscallArg0(GetSerialEntry);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ getSerialNumber.c
+
+0001::
+0002::#include "syscall.h"
+0003::
+0004::P_BYTE kos_getSerialNumber(void)
+0005::{
+0006::	return (P_BYTE)syscallArg0(GetSerialEntry);
+0007::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_chdir.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_chdir(P_BYTE pDir)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ PutString.c
+
+0001::#include "syscall.h"
+0002::
+0003::
+0004::U32 kos_PutString(U32 dx, U32 dy, P_VOID ptr)
+0005::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ PutString.c
+
+0001::#include "syscall.h"
+0002::
+0003::
+0004::U32 kos_PutString(U32 dx, U32 dy, P_VOID ptr)
+0005::{
+0006::	return (U32)syscallArg3(PutStringEntry, (U32)dx, (U32)dy, (U32)ptr);
+0007::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg1.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg1(U32 index, U32 arg1)
+0040::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg1.c
+
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg1(U32 index, U32 arg1)
+0040::{
+0041::	return SysCall(index);
+0042::}
+0043::
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetNextDirInfo.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_GetNextDirInfo(P_DIR_INFO pInfo, U32 index)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ LCDGetContrast.c
+
+0001::#include "syscall.h"
+0002::
+0003::U32 kos_LCDGetContrast(void)
+0004::{
+0005::	return (U32)syscallArg0(LCDGetContrastEntry);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ LCDGetContrast.c
+
+0001::#include "syscall.h"
+0002::
+0003::U32 kos_LCDGetContrast(void)
+0004::{
+0005::	return (U32)syscallArg0(LCDGetContrastEntry);
+0006::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_frename.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_frename(P_BYTE oldname, P_BYTE newname)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg6.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6)
+0040::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg6.c
+
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6)
+0040::{
+0041::	return SysCall(index);
+0042::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ Beep.c
+
+0001::#include "syscall.h"
+0002::#include "kos.h"
+0003::
+0004::void kos_KillBeep(void)
+0005::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ Beep.c
+
+0001::#include "syscall.h"
+0002::#include "kos.h"
+0003::
+0004::void kos_KillBeep(void)
+0005::{
+0006::	syscallArg0(StopBeepEntry);
+0007::}
+0008::
+0009::BOOL kos_CheckBeepEnd(void)
+0010::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ Beep.c
+
+0006::	syscallArg0(StopBeepEntry);
+0007::}
+0008::
+0009::BOOL kos_CheckBeepEnd(void)
+0010::{
+0011::	return (U32)syscallArg0(CheckBeepEndEntry);
+0012::}
+0013::
+0014::S32 kos_beep(U32 freq, TIME_T time, U32 override)
+0015::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ Beep.c
+
+0013::
+0014::S32 kos_beep(U32 freq, TIME_T time, U32 override)
+0015::{
+0016::	int retval;
+0017::	
+0018::	if((retval=syscallArg3(beepEntry, (U32)freq, (U32)time, (U32)override)) == SUCCESS)
+0019::		while(kos_CheckBeepEnd() == FALSE);
+0020::		
+0021::	
+0022::	return retval;
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ Reset.c
+
+0001::#include "syscall.h"
+0002::
+0003::void kos_Reset(void)
+0004::{
+0005::	syscallArg0(ResetEntry);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ Reset.c
+
+0001::#include "syscall.h"
+0002::
+0003::void kos_Reset(void)
+0004::{
+0005::	syscallArg0(ResetEntry);
+0006::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetPrevDirInfo.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_GetPrevDirInfo(P_DIR_INFO pInfo, U32 index)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_SetRTCTime.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_SetRTCTime(P_KDATETIME pTime)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_SetRTCTime.c
+
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_SetRTCTime(P_KDATETIME pTime)
+0041::{
+0042::	return (S32)syscallArg1(SetRTCTimeEntry, (U32)pTime);
+0043::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_CheckDiskInsert.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_CheckDiskInsert(void)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_mem.c
+
+0001:://KOS memory mangement
+0002::
+0003::#include "syscall.h"
+0004::
+0005::#ifndef HEAP0   
+0006::#define HEAP0 0x0100   
+0007::#endif
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_mem.c
+
+0008::
+0009:://modified by Al 19th Oct '04, always use HEAP0 type
+0010::
+0011::void *kos_malloc(SIZE_T size)
+0012::{
+0013::	return (void *)syscallArg2(mallocEntry, (U32)HEAP0, (U32)size);
+0014::}
+0015::
+0016::S32 kos_free(void *pMemory)
+0017::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_mem.c
+
+0014::}
+0015::
+0016::S32 kos_free(void *pMemory)
+0017::{
+0018::	if(pMemory == 0)return -1; //if trying to free NULL, return -1
+0019::	return (S32)syscallArg1(freeEntry, (U32)pMemory);
+0020::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg3.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3)
+0040::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg3.c
+
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3)
+0040::{
+0041::	return SysCall(index);
+0042::}
+0043::
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetRTCTime.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::void kos_GetRTCTime(P_KDATETIME pTime)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetRTCTime.c
+
+0037::#include <kos.h>
+0038::
+0039::
+0040::void kos_GetRTCTime(P_KDATETIME pTime)
+0041::{
+0042::	syscallArg1(GetRTCTimeEntry, (U32)pTime);
+0043::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetNextFileInfo.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_GetNextFileInfo(P_FILE_INFO pInfo, U32 index)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg4.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4)
+0040::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg4.c
+
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4)
+0040::{
+0041::	return SysCall(index);
+0042::}
+0043::
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ kos_GetFirstFileInfo.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include <syscall.h>
+0037::#include <kos.h>
+0038::
+0039::
+0040::S32 kos_GetFirstFileInfo(P_FILE_INFO pInfo)
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg2.c
+
+0031:://& invalidate any other reasons why the executable file might be covered by
+0032:://& the GNU General Public License.
+0033:://&
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg2(U32 index, U32 arg1, U32 arg2)
+0040::{
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ syscallArg2.c
+
+0034:://& ****************************************************************************
+0035::
+0036::#include "syscall.h"
+0037::
+0038::
+0039::U32 syscallArg2(U32 index, U32 arg1, U32 arg2)
+0040::{
+0041::	return SysCall(index);
+0042::}
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ ClearLcd.c
+
+0001::#include "syscall.h"
+0002::
+0003::void kos_ClearLcd(void)
+0004::{
+0005::	syscallArg0(ClearLcdEntry);
+---------------------------------------------
+ /home/tonny/arm-hp/sources/hplib/kos
+ ClearLcd.c
+
+0001::#include "syscall.h"
+0002::
+0003::void kos_ClearLcd(void)
+0004::{
+0005::	syscallArg0(ClearLcdEntry);
+0006::}
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ hpgcc49.h
+
+0045::#include <hpstdlib.h>
+0046::#include <hpstring.h>
+0047::#include <hpsys.h>
+0048::#include <hptime.h>
+0049::#include <kos.h>
+0050::#include <syscall.h>
+0051::#include <saturn.h>
+0052::#include <satdir.h>
+0053::
+0054::#endif
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0007::
+0008::/*#define U32 unsigned int
+0009::#define S32 signed int*/
+0010::
+0011::
+0012::// define syscall entry 000-099
+0013::#define ReserveForTaskScheduler 0
+0014::#define ResetEntry              1
+0015::#define ScheduleTaskEntry       10
+0016::#define CreateMutexEntry        11
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0036::
+0037::#define	CheckBeepEndEntry		28
+0038::#define	StopBeepEntry			29
+0039::#define	GetCPUSpeed				30
+0040::
+0041::// define syscall entry 100-199
+0042::#define freeEntry               101
+0043::#define KillTaskEntry           102
+0044::#define GetTaskPriorityEntry    103
+0045::#define SuspendTaskEntry        104
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0082::
+0083:://lcd refresh interrupt entry
+0084::#define LcdRefreshEntry   		139
+0085::#define LcdRefreshSwitchEntry	140
+0086::
+0087::// define syscall entry 200-299
+0088::#define mallocEntry             201
+0089::#define SetTaskPriorityEntry    202
+0090::#define DelayTaskEntry          203
+0091::#define CreateSemaphoreEntry    204
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0108::#define controlEntry            217
+0109::
+0110::#define GetFuncEntry            218
+0111::#define SetCPUFreqEntry         219
+0112::
+0113::// define syscall entry 300-399
+0114::#define GetMutexEntry           301
+0115::#define GetSemaphoreEntry       302
+0116::
+0117::#define beepEntry               305
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0117::#define beepEntry               305
+0118::
+0119::#define PutStringEntry			306
+0120::#define PutHexNumberEntry		307
+0121::
+0122::// define syscall entry 400-499
+0123::#define CreateTaskEntry         401
+0124::
+0125::#define readEntry               402
+0126::#define writeEntry              403
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0125::#define readEntry               402
+0126::#define writeEntry              403
+0127::#define PutDecNumberEntry		404
+0128::#define Num2StringEntry			405
+0129::
+0130::// define syscall entry 500-599
+0131::
+0132::// define syscall entry 600-699
+0133::
+0134::// define syscall entry 700-799
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0127::#define PutDecNumberEntry		404
+0128::#define Num2StringEntry			405
+0129::
+0130::// define syscall entry 500-599
+0131::
+0132::// define syscall entry 600-699
+0133::
+0134::// define syscall entry 700-799
+0135::
+0136::
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0129::
+0130::// define syscall entry 500-599
+0131::
+0132::// define syscall entry 600-699
+0133::
+0134::// define syscall entry 700-799
+0135::
+0136::
+0137::// sys call functions
+0138::
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0135::
+0136::
+0137::// sys call functions
+0138::
+0139::U32 SysCall(U32 index);
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0136::
+0137::// sys call functions
+0138::
+0139::U32 SysCall(U32 index);
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0137::// sys call functions
+0138::
+0139::U32 SysCall(U32 index);
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0138::
+0139::U32 SysCall(U32 index);
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+0147::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7);
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0139::U32 SysCall(U32 index);
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+0147::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7);
+0148::
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0140::U32 syscallArg0(U32 index);
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+0147::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7);
+0148::
+0149::#endif
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0141::U32 syscallArg1(U32 index, U32 arg1);
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+0147::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7);
+0148::
+0149::#endif
+---------------------------------------------
+ /home/tonny/arm-hp/include
+ syscall.h
+
+0142::U32 syscallArg2(U32 index, U32 arg1, U32 arg2);
+0143::U32 syscallArg3(U32 index, U32 arg1, U32 arg2, U32 arg3);
+0144::U32 syscallArg4(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4);
+0145::U32 syscallArg5(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5);
+0146::U32 syscallArg6(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6);
+0147::U32 syscallArg7(U32 index, U32 arg1, U32 arg2, U32 arg3, U32 arg4, U32 arg5, U32 arg6, U32 arg7);
+0148::
+0149::#endif
+---------------------------------------------

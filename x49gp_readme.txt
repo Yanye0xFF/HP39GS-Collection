@@ -1,0 +1,1 @@
+﻿Emulator of the newer Hewlett-Packard handheld calculator models with an ARM CPU (HP 49g+ and HP 50g). This is a true ARM emulator running on Unix, Linux, and MacOS Systems. Porting to Windows should be easy as the GUI is based on GTK+. The project is still in alpha state; you can find updates at http://x49gp.sourceforge.net/ or https://github.com/claudiobsd/x49gp.
